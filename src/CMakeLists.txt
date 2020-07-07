@@ -1,0 +1,1 @@
+add_executable(${PROJECT_NAME} main.cpp binomial_model.cpp binomial_tree.cpp)
