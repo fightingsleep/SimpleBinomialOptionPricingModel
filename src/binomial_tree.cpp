@@ -16,7 +16,7 @@ void BinomialTree::Build(
         step.nodes.resize(nodesPerStep++);
     }
 
-    // Navigate the tree and fill in the stock prices
+    // Navigate the tree and fill in the stock prices.
     for (size_t i = 0; i < this->size(); i++)
     {
         for (size_t j = 0; j < (*this)[i].nodes.size(); j++)
@@ -29,10 +29,10 @@ void BinomialTree::Build(
 void BinomialTree::Print()
 {
     int time_step = 0;
-    for (auto it = this->begin(); it != this->end(); it++)
+    for (auto const &step : *this)
     {
         std::cout << "Time step " << time_step++ << ": ";
-        for (auto const &node : it->nodes)
+        for (auto const &node : step.nodes)
         {
             std::cout << " || Stock Price: " << node.stock_price << ", Option Value: " << node.option_value << " || ";
         }

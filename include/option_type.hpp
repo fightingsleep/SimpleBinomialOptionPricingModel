@@ -3,8 +3,8 @@
 
 enum OptionType
 {
-    CALL,
-    PUT
+    CALL = 0,
+    PUT = 1
 };
 
 #endif // INCLUDE_OPTION_TYPE_HPP_

@@ -9,6 +9,8 @@ void BinomialModel::Initialize(
     int time_steps)
 {
     double delta_t = years_until_expiry / time_steps;
+    // The up and down factors are calculated using the Cox, Ross, & Rubinstein (CRR)
+    // method to guarantee that the tree is recombinant.
     double up_factor = std::exp(volatility * std::sqrt(delta_t));
     double down_factor = std::exp(-volatility * std::sqrt(delta_t));
 
@@ -18,14 +20,15 @@ void BinomialModel::Initialize(
     tree_.up_factor = up_factor;
     tree_.down_factor = down_factor;
 
-    // Build the tree structure
+    // Build the tree structure and set the stock prices at each node
     tree_.Build(spot_price, up_factor, down_factor, time_steps);
 }
 
 double BinomialModel::PriceOption(
     double strike_price,
     double risk_free_rate,
-    OptionType option_type)
+    OptionType option_type,
+    bool print_tree)
 {
     // Fill in the instrinsic option value at expiry
     int last_index = tree_.size() - 1;
@@ -59,7 +62,10 @@ double BinomialModel::PriceOption(
         }
     }
 
-    tree_.Print();
+    if (print_tree)
+    {
+        tree_.Print();
+    }
 
     return tree_[0].nodes[0].option_value;
 }
