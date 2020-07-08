@@ -19,7 +19,8 @@ public:
     double PriceOption(
         double strike_price,
         double risk_free_rate,
-        OptionType option_type = CALL);
+        OptionType option_type = CALL,
+        bool print_tree = false);
 
 protected:
     // The internal binomial tree

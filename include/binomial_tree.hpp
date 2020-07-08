@@ -24,7 +24,15 @@ public:
     double up_factor;
     double down_factor;
     double spot_price;
-    void Build(int time_steps);
+
+    // Build the tree structure and set stock prices at each node
+    void Build(
+        double spot_price,
+        double up_factor,
+        double down_factor,
+        int time_steps);
+
+    // Print the tree for debugging
     void Print();
 };
 
