@@ -1,13 +1,28 @@
 #include "binomial_tree.hpp"
 #include <iostream>
+#include <cmath>
 
-void BinomialTree::Build(int time_steps)
+void BinomialTree::Build(
+    double spot_price,
+    double up_factor,
+    double down_factor,
+    int time_steps)
 {
+    // Create the general tree structure
     resize(time_steps + 1);
     int nodesPerStep = 1;
-    for (auto it = this->begin(); it != this->end(); it++)
+    for (auto &step : *this)
     {
-        it->nodes.resize(nodesPerStep++);
+        step.nodes.resize(nodesPerStep++);
+    }
+
+    // Navigate the tree and fill in the stock prices
+    for (size_t i = 0; i < this->size(); i++)
+    {
+        for (size_t j = 0; j < (*this)[i].nodes.size(); j++)
+        {
+            (*this)[i].nodes[j].stock_price = spot_price * std::pow(up_factor, j) * std::pow(down_factor, i - j);
+        }
     }
 }
 

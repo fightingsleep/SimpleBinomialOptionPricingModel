@@ -19,16 +19,7 @@ void BinomialModel::Initialize(
     tree_.down_factor = down_factor;
 
     // Build the tree structure
-    tree_.Build(time_steps);
-
-    // Navigate the tree and fill in the stock prices
-    for (size_t i = 0; i < tree_.size(); i++)
-    {
-        for (size_t j = 0; j < tree_[i].nodes.size(); j++)
-        {
-            tree_[i].nodes[j].stock_price = spot_price * std::pow(up_factor, j) * std::pow(down_factor, i - j);
-        }
-    }
+    tree_.Build(spot_price, up_factor, down_factor, time_steps);
 }
 
 double BinomialModel::PriceOption(
