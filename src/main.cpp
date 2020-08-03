@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     std::cin >> risk_free_rate;
     std::cout << "Number of time steps (ex: 2): ";
     std::cin >> time_steps;
-    std::cout << "Option type (0 = CALL, 1 = PUT)";
+    std::cout << "Option type (0 = CALL, 1 = PUT): ";
     std::cin >> option_type;
     std::cout << "Print tree? (0 = NO, 1 = YES): ";
     std::cin >> print_tree;
