@@ -28,6 +28,7 @@ double BinomialModel::PriceOption(
     double strike_price,
     double risk_free_rate,
     OptionType option_type,
+    OptionStyle option_style,
     bool print_tree)
 {
     // Fill in the instrinsic option value at expiry
@@ -59,6 +60,18 @@ double BinomialModel::PriceOption(
                 tree_[i + 1].nodes[j + 1].option_value,
                 tree_[i + 1].nodes[j].option_value,
                 tree_.delta_t);
+
+            if (option_style == AMERICAN)
+            {
+                double current_stock_price = tree_[i].nodes[j].stock_price;
+                double early_exercise_value = option_type == CALL ?
+                    current_stock_price - strike_price : strike_price - current_stock_price;
+                
+                if (early_exercise_value > tree_[i].nodes[j].option_value)
+                {
+                    tree_[i].nodes[j].option_value = early_exercise_value;
+                }
+            }
         }
     }
 

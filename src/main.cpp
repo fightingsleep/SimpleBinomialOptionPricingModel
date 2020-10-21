@@ -5,8 +5,10 @@
 int main(int argc, char *argv[])
 {
     double spot_price, strike_price, years_until_expiry, volatility, risk_free_rate;
-    int time_steps, option_type;
+    int time_steps, option_type, option_style;
     bool print_tree = false;
+    std::cout << "Option style (0 = European, 1 = American): ";
+    std::cin >> option_style;
     std::cout << "Stock spot price (ex: 20): ";
     std::cin >> spot_price;
     std::cout << "Option strike price (ex: 21): ";
@@ -26,6 +28,11 @@ int main(int argc, char *argv[])
 
     auto model = std::make_shared<BinomialModel>();
     model->Initialize(spot_price, years_until_expiry, volatility, time_steps);
-    double option_value = model->PriceOption(strike_price, risk_free_rate, static_cast<OptionType>(option_type), print_tree);
+    double option_value = model->PriceOption(
+        strike_price,
+        risk_free_rate,
+        static_cast<OptionType>(option_type), 
+        static_cast<OptionStyle>(option_style),
+        print_tree);
     std::cout << "Option value: " << option_value << std::endl;
 }

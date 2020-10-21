@@ -7,4 +7,10 @@ enum OptionType
     PUT = 1
 };
 
+enum OptionStyle
+{
+    EUROPEAN = 0,
+    AMERICAN = 1
+};
+
 #endif // INCLUDE_OPTION_TYPE_HPP_

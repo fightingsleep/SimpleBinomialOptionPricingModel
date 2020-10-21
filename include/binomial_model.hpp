@@ -20,6 +20,7 @@ public:
         double strike_price,
         double risk_free_rate,
         OptionType option_type = CALL,
+        OptionStyle option_style = EUROPEAN,
         bool print_tree = false);
 
 protected:
