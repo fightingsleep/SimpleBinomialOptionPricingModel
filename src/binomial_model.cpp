@@ -1,6 +1,7 @@
 #include "binomial_model.hpp"
 #include <cmath>
 #include <algorithm>
+#include <iostream>
 
 void BinomialModel::Initialize(
     double spot_price,
@@ -27,9 +28,10 @@ void BinomialModel::Initialize(
 double BinomialModel::PriceOption(
     double strike_price,
     double risk_free_rate,
+    double dividend_yield,
     OptionType option_type,
     OptionStyle option_style,
-    bool print_tree)
+    bool output_debug_info)
 {
     // Fill in the instrinsic option value at expiry
     int last_index = tree_.size() - 1;
@@ -55,12 +57,34 @@ double BinomialModel::PriceOption(
                 tree_.spot_price,
                 strike_price,
                 risk_free_rate,
+                dividend_yield,
                 tree_.up_factor,
                 tree_.down_factor,
                 tree_[i + 1].nodes[j + 1].option_value,
                 tree_[i + 1].nodes[j].option_value,
                 tree_.delta_t);
 
+            if (output_debug_info)
+            {
+                // Compare our two option pricing equations to make sure they are equal
+                auto altOptionVal = CalculateOptionPrice(
+                    tree_.spot_price,
+                    strike_price,
+                    risk_free_rate,
+                    dividend_yield,
+                    tree_.up_factor,
+                    tree_.down_factor,
+                    tree_[i + 1].nodes[j + 1].option_value,
+                    tree_[i + 1].nodes[j].option_value,
+                    tree_.delta_t);
+                if (std::abs(tree_[i].nodes[j].option_value - altOptionVal) > epsilon)
+                {
+                    std::cout << "** Option price mismatch detected **" << std::endl;
+                }
+            }
+
+            // In the case of american style options, sometimes the value of exercising the option
+            // early is greater than the option value calculated above.
             if (option_style == AMERICAN)
             {
                 double current_stock_price = tree_[i].nodes[j].stock_price;
@@ -75,7 +99,7 @@ double BinomialModel::PriceOption(
         }
     }
 
-    if (print_tree)
+    if (output_debug_info)
     {
         tree_.Print();
     }
@@ -87,6 +111,7 @@ double BinomialModel::ValueRiskFreePortfolio(
     double spot_price,
     double strike_price,
     double risk_free_rate,
+    double dividend_yield,
     double up_factor,
     double down_factor,
     double option_value_up,
@@ -97,9 +122,35 @@ double BinomialModel::ValueRiskFreePortfolio(
     double delta = (option_value_up - option_value_down) / (spot_price * (up_factor - down_factor));
 
     // Discount the value of the riskless portfolio back to today
-    double discounted_value = (spot_price * up_factor * delta - option_value_up) * std::exp(-risk_free_rate * term);
+    double discounted_value = (spot_price * up_factor * delta - option_value_up) * std::exp(-(risk_free_rate * term));
 
     // Return the arbitrage-free option value
-    // From formula: S0 * Delta - C = risk-free portfolio value
-    return spot_price * delta - discounted_value;
+    if (dividend_yield == 0.0)
+    {
+        // From formula: S0 * Delta - C = risk-free portfolio discounted value
+        return spot_price * delta - discounted_value;
+    }
+    else
+    {
+        // Hull never states the dividend adjustment in this format, but it is equivalent to his example
+        return spot_price * delta * std::exp(-(dividend_yield * term)) - discounted_value;
+    }
+}
+
+double BinomialModel::CalculateOptionPrice(
+    double spot_price,
+    double strike_price,
+    double risk_free_rate,
+    double dividend_yield,
+    double up_factor,
+    double down_factor,
+    double option_value_up,
+    double option_value_down,
+    double term)
+{
+    // From formula: p = (e^(rT) - d) / (u - d)
+    double p = (std::exp((risk_free_rate - dividend_yield) * term) - down_factor) / (up_factor - down_factor);
+
+    // From formula: f = e^(-rT) * [p * fu + (1 - p) * fd]
+    return std::exp(-risk_free_rate * term) * ((p * option_value_up) + ((1 - p) * option_value_down));
 }
