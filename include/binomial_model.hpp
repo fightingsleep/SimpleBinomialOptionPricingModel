@@ -43,7 +43,7 @@ protected:
         double term);
 
     // Returns the value of the option by using Hull's "probability" equation.
-    // This is mathetically equivalent to the method above. I just added it
+    // This is mathematically equivalent to the method above. I just added it
     // for educational purposes and to prove that they are the same.
     double CalculateOptionPrice(
         double spot_price,

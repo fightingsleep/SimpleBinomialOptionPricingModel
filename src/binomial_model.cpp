@@ -122,7 +122,7 @@ double BinomialModel::ValueRiskFreePortfolio(
     double delta = (option_value_up - option_value_down) / (spot_price * (up_factor - down_factor));
 
     // Discount the value of the riskless portfolio back to today
-    double discounted_value = (spot_price * up_factor * delta - option_value_up) * std::exp(-(risk_free_rate * term));
+    double discounted_value = (spot_price * up_factor * delta - option_value_up) * std::exp(-risk_free_rate * term);
 
     // Return the arbitrage-free option value
     if (dividend_yield == 0.0)
