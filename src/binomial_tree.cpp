@@ -9,19 +9,19 @@ void BinomialTree::Build(
     int time_steps)
 {
     // Create the general tree structure
-    resize(time_steps + 1);
+    tree_.resize(time_steps + 1);
     int nodesPerStep = 1;
-    for (auto &step : *this)
+    for (auto &step : tree_)
     {
         step.nodes.resize(nodesPerStep++);
     }
 
     // Navigate the tree and fill in the stock prices.
-    for (size_t i = 0; i < this->size(); i++)
+    for (size_t i = 0; i < tree_.size(); i++)
     {
-        for (size_t j = 0; j < (*this)[i].nodes.size(); j++)
+        for (size_t j = 0; j < tree_[i].nodes.size(); j++)
         {
-            (*this)[i].nodes[j].stock_price = spot_price * std::pow(up_factor, j) * std::pow(down_factor, i - j);
+            tree_[i].nodes[j].stock_price = spot_price * std::pow(up_factor, j) * std::pow(down_factor, i - j);
         }
     }
 }
@@ -29,7 +29,7 @@ void BinomialTree::Build(
 void BinomialTree::Print()
 {
     int time_step = 0;
-    for (auto const &step : *this)
+    for (auto const &step : tree_)
     {
         std::cout << "Time step " << time_step++ << ": ";
         for (auto const &node : step.nodes)
@@ -39,4 +39,14 @@ void BinomialTree::Print()
         std::cout << std::endl;
     }
     std::cout << std::endl;
+}
+
+TimeStep& BinomialTree::operator[](int index)
+{
+    return tree_[index];
+}
+
+size_t BinomialTree::size()
+{
+    return tree_.size();
 }
