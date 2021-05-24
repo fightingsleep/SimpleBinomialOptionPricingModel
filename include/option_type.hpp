@@ -1,13 +1,13 @@
 #ifndef INCLUDE_OPTION_TYPE_HPP_
 #define INCLUDE_OPTION_TYPE_HPP_
 
-enum OptionType
+enum class OptionType
 {
     CALL = 0,
     PUT = 1
 };
 
-enum OptionStyle
+enum class OptionStyle
 {
     EUROPEAN = 0,
     AMERICAN = 1

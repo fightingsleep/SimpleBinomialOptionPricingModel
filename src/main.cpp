@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
         strike_price,
         risk_free_rate,
         dividend_yield,
-        static_cast<OptionType>(option_type), 
+        static_cast<OptionType>(option_type),
         static_cast<OptionStyle>(option_style),
         output_debug_info);
     std::cout << "Option value: " << option_value << std::endl << std::endl;

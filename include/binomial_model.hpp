@@ -6,7 +6,7 @@
 
 class BinomialModel
 {
-public:
+ public:
     // Initializes the binomial option pricing model by constructing a tree based
     // on the given arguments.
     void Initialize(
@@ -20,11 +20,11 @@ public:
         double strike_price,
         double risk_free_rate,
         double dividend_yield,
-        OptionType option_type = CALL,
-        OptionStyle option_style = EUROPEAN,
+        OptionType option_type = OptionType::CALL,
+        OptionStyle option_style = OptionStyle::EUROPEAN,
         bool output_debug_info = false);
 
-protected:
+ protected:
     // The internal binomial tree
     BinomialTree tree_;
 
@@ -56,8 +56,9 @@ protected:
         double option_value_down,
         double term);
 
-private:
+ private:
     double epsilon = 0.0000001;
 };
 
 #endif // INCLUDE_BINOMIAL_MODEL_HPP_
+

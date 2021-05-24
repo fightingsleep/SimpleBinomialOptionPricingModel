@@ -37,7 +37,7 @@ double BinomialModel::PriceOption(
     int last_index = tree_.size() - 1;
     for (size_t i = 0; i < tree_[last_index].nodes.size(); i++)
     {
-        if (option_type == CALL)
+        if (option_type == OptionType::CALL)
         {
             tree_[last_index].nodes[i].option_value = std::max(tree_[last_index].nodes[i].stock_price - strike_price, 0.0);
         }
@@ -85,12 +85,12 @@ double BinomialModel::PriceOption(
 
             // In the case of american style options, sometimes the value of exercising the option
             // early is greater than the option value calculated above.
-            if (option_style == AMERICAN)
+            if (option_style == OptionStyle::AMERICAN)
             {
                 double current_stock_price = tree_[i].nodes[j].stock_price;
-                double early_exercise_value = option_type == CALL ?
+                double early_exercise_value = option_type == OptionType::CALL ?
                     current_stock_price - strike_price : strike_price - current_stock_price;
-                
+
                 if (early_exercise_value > tree_[i].nodes[j].option_value)
                 {
                     tree_[i].nodes[j].option_value = early_exercise_value;

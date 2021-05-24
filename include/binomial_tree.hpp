@@ -17,13 +17,13 @@ struct TimeStep
 // The binomial tree in this implementation is just a vector of vectors.
 // The first vector represents each time step in the tree, and the inner
 // vectors represent the nodes at each time step.
-class BinomialTree : public std::vector<TimeStep>
+class BinomialTree
 {
-public:
-    double delta_t;
-    double up_factor;
-    double down_factor;
-    double spot_price;
+ public:
+    double delta_t = 0;
+    double up_factor = 0;
+    double down_factor = 0;
+    double spot_price = 0;
 
     // Build the tree structure and set stock prices at each node
     void Build(
@@ -34,6 +34,11 @@ public:
 
     // Print the tree for debugging
     void Print();
+
+    TimeStep& operator[](int);
+    size_t size();
+ private:
+    std::vector<TimeStep> tree_;
 };
 
 #endif // INCLUDE_BINOMIAL_TREE_HPP_
